@@ -44,7 +44,6 @@ public class LoginController {
     @ResponseBody
     public MyResult<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo){
         MyResult<Boolean> result = MyResult.build();
-        log.info(loginVo.toString());
         userService.login(response, loginVo);
         return result;
     }

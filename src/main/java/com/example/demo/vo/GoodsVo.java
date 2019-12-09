@@ -26,8 +26,8 @@ public class GoodsVo{
     private String goodsDetail;
     private Double goodsPrice;
     private Integer goodsStock;
-    private Double miaoshaPrice;
     private Integer stockCount;
     private Date startDate;
     private Date endDate;
+    private Double miaoshaPrice;
 }

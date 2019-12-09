@@ -5,7 +5,7 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
-    cache: false
+    cache: true
     servlet:
       content-type: text/html
     enabled: true
@@ -34,10 +34,14 @@ spring:
       url: jdbc:mysql://localhost:3306/miaosha?serverTimezone=GMT
       username: root
       password: 123456!a
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
 
   # redis
   redis:
-    host: 49.234.28.27
+    host: 127.0.0.1
     port: 6379
     jedis:
       pool:

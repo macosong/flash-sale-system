@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.Date;
@@ -37,6 +38,21 @@ public class MiaoShaUserService {
     @Autowired
     private RedisService redisService;
 
+    public MiaoshaUser getFromCookie(HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        String nickName = "";
+        for (Cookie cookie : cookies){
+            if ("nickname".equals(cookie.getName())){
+                nickName = cookie.getValue();
+                break;
+            }
+        }
+        if (nickName.equals("")){
+            throw new GlobalException(USER_NOT_EXIST);
+        }
+        return getByNickName(nickName);
+    }
+
     /**
      * 通过昵称从redis中获取MiaoshaUser对象
      *
@@ -56,6 +72,7 @@ public class MiaoShaUserService {
         }
         return user;
     }
+
 
     /**
      * 处理用户登录
@@ -127,9 +144,12 @@ public class MiaoShaUserService {
     private void addCookie(HttpServletResponse response, String token, MiaoshaUser user){
         redisService.set(MiaoShaUserKey.token, token, user);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
-        //设置有效期
         cookie.setMaxAge(MiaoShaUserKey.token.expireSeconds());
         cookie.setPath("/");
+        Cookie userCookie = new Cookie("nickname", String.valueOf(user.getNickname()));
+        userCookie.setMaxAge(MiaoShaUserKey.token.expireSeconds());
+        userCookie.setPath("/");
         response.addCookie(cookie);
+        response.addCookie(userCookie);
     }
 }

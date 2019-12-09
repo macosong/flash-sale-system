@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.MiaoshaUser;
 import com.example.demo.redis.MiaoshaKey;
 import com.example.demo.redis.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,14 @@ import java.util.Random;
 public class MiaoshaService {
     @Autowired
     private RedisService redisService;
+
+    public boolean checkPath(MiaoshaUser user, long goodsId, String path){
+        if (user == null || path == null){
+            return false;
+        }
+        String pathOld = redisService.get(MiaoshaKey.getMiaoshaPath, ""+user.getNickname() + "_"+goodsId, String.class);
+        return path.equals(pathOld);
+    }
 
     /**
      * 用户注册页面初始化时生成验证码

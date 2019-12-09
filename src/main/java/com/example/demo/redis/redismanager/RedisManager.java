@@ -1,5 +1,6 @@
 package com.example.demo.redis.redismanager;
 
+import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -19,7 +20,8 @@ import redis.clients.jedis.JedisPoolConfig;
  * @data 2019/10/24
  */
 public class RedisManager {
-    private static String redisHost = "49.234.28.27";
+    @Value("${spring.redis.host}")
+    private static String redisHost;
 
     private static JedisPool jedisPool;
 

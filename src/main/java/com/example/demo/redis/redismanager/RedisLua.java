@@ -57,7 +57,7 @@ public class RedisLua {
         redisVisit(key, incrLua);
     }
 
-//    public static void main(String[] args){
-//        visitorCount("count:login");
-//    }
+    public static void main(String[] args){
+        visitorCount("count:login");
+    }
 }
