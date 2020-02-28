@@ -8,10 +8,10 @@ import com.example.demo.common.enums.ResultStatus;
  * @author maco
  * @data 2019/10/24
  */
-public class GlobalException extends RuntimeException{
+public class GlobalException extends RuntimeException {
     private ResultStatus status;
 
-    public GlobalException(ResultStatus status){
+    public GlobalException(ResultStatus status) {
         super();
         this.status = status;
     }

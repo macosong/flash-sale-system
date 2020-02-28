@@ -32,7 +32,9 @@ public class RegisterController {
     private MiaoshaService miaoshaService;
 
     @RequestMapping("/do_register")
-    public String registerIndex() { return "register"; }
+    public String registerIndex() {
+        return "register";
+    }
 
     /**
      * 网站注册
@@ -50,19 +52,19 @@ public class RegisterController {
                                      @RequestParam("password") String password,
                                      @RequestParam("verifyCode") String verifyCode,
                                      @RequestParam("salt") String salt,
-                                     HttpServletResponse response){
+                                     HttpServletResponse response) {
         MyResult<String> result = MyResult.build();
 
         //校验验证码
         boolean check = miaoshaService.checkVerifyCodeRegister(Integer.parseInt(verifyCode));
-        if (!check){
+        if (!check) {
             result.withError(CODE_FAIL.getCode(), CODE_FAIL.getMessage());
             return result;
         }
 
         //注册
-        boolean registerInfo = miaoShaUserService.register(response,userName, password, salt);
-        if (!registerInfo){
+        boolean registerInfo = miaoShaUserService.register(response, userName, password, salt);
+        if (!registerInfo) {
             result.withError(REGISTER_FAIL.getCode(), REGISTER_FAIL.getMessage());
             return result;
         }

@@ -2,6 +2,7 @@ package com.example.demo.redis.redismanager;
 
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
+
 import java.util.*;
 
 /**
@@ -20,17 +21,17 @@ public class RedisLua {
      * @param luaStr
      * @return
      */
-    public static Object redisVisit(String key, String luaStr){
+    public static Object redisVisit(String key, String luaStr) {
         Jedis jedis;
         Object object = null;
-        try{
+        try {
             jedis = RedisManager.getJedis();
             List<String> keys = new ArrayList<>();
             keys.add(key);
             List<String> argves = new ArrayList<>();
             String luaScript = jedis.scriptLoad(luaStr);
             object = jedis.evalsha(luaScript, keys, argves);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("统计访问次数失败！！！", e);
         }
         return object;
@@ -52,12 +53,12 @@ public class RedisLua {
      *
      * @param key
      */
-    public static void visitorCount(String key){
+    public static void visitorCount(String key) {
         String incrLua = "local num=redis.call('incr',KEYS[1]) return num";
         redisVisit(key, incrLua);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         visitorCount("count:login");
     }
 }

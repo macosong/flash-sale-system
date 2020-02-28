@@ -1,8 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.User;
+import org.springframework.stereotype.Service;
 
-public interface UserService {
-    User findByName(String name);
-    void intsert(User user);
+/**
+ * UserService
+ *
+ * @author maco
+ * @data 2019/10/24
+ */
+
+public class UserService {
 }

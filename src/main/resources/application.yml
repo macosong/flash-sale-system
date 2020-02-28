@@ -31,17 +31,41 @@ spring:
       filters: stat, wall
       use-global-data-source-stat: true
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-      url: jdbc:mysql://localhost:3306/miaosha?serverTimezone=GMT
+      url: jdbc:mysql://172.19.241.75:3306/miaosha?serverTimezone=GMT&useSSL=false
       username: root
-      password: 123456!a
+      password: 123456!aB
   devtools:
     restart:
       enabled: true
       additional-paths: src/main/java
-
+  # rabbitmq
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        concurrency: 10
+        max-concurrency: 10
+        prefetch: 1
+        auto-startup: true
+        default-requeue-rejected: true
+        acknowledge-mode: manual
+      direct:
+        acknowledge-mode: manual
+    template:
+      retry:
+        enabled: true
+        initial-interval: 1000
+        max-attempts: 3
+        max-interval: 10000
+        multiplier: 1.0
+    publisher-confirms: true
   # redis
   redis:
-    host: 127.0.0.1
+    host: 49.234.28.27
     port: 6379
     jedis:
       pool:
@@ -56,5 +80,8 @@ pageCache:
   enable: true
 
 
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
+
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+server:
+  port: 8090

@@ -16,8 +16,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = {MobileValidator.class})
 public @interface MobileCheck {
     /**
-     * @Retention:用来说明该注解类的生命周期，有三个参数
-     * RetentionPolicy.SOURCE: 注解只保留在源文件种
+     * @Retention:用来说明该注解类的生命周期，有三个参数 RetentionPolicy.SOURCE: 注解只保留在源文件种
      * RetentionPolicy.CLASS: 注解保留在class文件中，在加载到JVM虚拟机时丢弃
      * RetentionPolicy.RUNTIME: 注解保留在程序运行期间，此时可以通过反射获得定义在某个类上的所有注解
      */

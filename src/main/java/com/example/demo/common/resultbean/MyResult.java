@@ -15,7 +15,10 @@ public class MyResult<T> extends AbstractResult implements Serializable {
     private T data;
     private Integer count;
 
-    protected MyResult(ResultStatus status, String message) { super(status, message); }
+    protected MyResult(ResultStatus status, String message) {
+        super(status, message);
+    }
+
     protected MyResult(ResultStatus status) {
         super(status);
     }
@@ -26,9 +29,18 @@ public class MyResult<T> extends AbstractResult implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> MyResult<T> build(){ return new MyResult(ResultStatus.SUCCESS, null); }
+    public static <T> MyResult<T> build() {
+        return new MyResult(ResultStatus.SUCCESS, null);
+    }
 
-    public static <T> MyResult<T> build(String message){ return new MyResult(ResultStatus.SUCCESS, message); }
+    public static <T> MyResult<T> build(String message) {
+        return new MyResult(ResultStatus.SUCCESS, message);
+    }
+
+    public static <T> MyResult<T> error(ResultStatus status) {
+        return new MyResult<>(status);
+    }
+
 
 
     public T getData() {

@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.MiaoshaUser;
+import com.example.demo.domain.OrderInfo;
 import com.example.demo.redis.MiaoshaKey;
 import com.example.demo.redis.RedisService;
+import com.example.demo.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -23,11 +26,45 @@ public class MiaoshaService {
     @Autowired
     private RedisService redisService;
 
-    public boolean checkPath(MiaoshaUser user, long goodsId, String path){
-        if (user == null || path == null){
+    @Autowired
+    OrderService orderService;
+
+    @Autowired
+    GoodsService goodsService;
+
+    /**
+     *
+     *
+     * @param user
+     * @param goods
+     * @return
+     */
+    @Transactional
+    public OrderInfo miaosha(MiaoshaUser user, GoodsVo goods) {
+        //减库存
+        boolean success = goodsService.reduceStock(goods);
+        if (success) {
+            return orderService.createOrder(user, goods);
+        } else {
+            //如果库存不存在则内存标记为true
+            setGoodsOver(goods.getId());
+            return null;
+        }
+    }
+
+    private void setGoodsOver(Long goodsId) {
+        redisService.set(MiaoshaKey.isGoodsOver, "" + goodsId, true);
+    }
+
+    private boolean getGoodsOver(long goodsId) {
+        return redisService.exists(MiaoshaKey.isGoodsOver, "" + goodsId);
+    }
+
+    public boolean checkPath(MiaoshaUser user, long goodsId, String path) {
+        if (user == null || path == null) {
             return false;
         }
-        String pathOld = redisService.get(MiaoshaKey.getMiaoshaPath, ""+user.getNickname() + "_"+goodsId, String.class);
+        String pathOld = redisService.get(MiaoshaKey.getMiaoshaPath, "" + user.getNickname() + "_" + goodsId, String.class);
         return path.equals(pathOld);
     }
 
@@ -36,7 +73,7 @@ public class MiaoshaService {
      *
      * @return
      */
-    public BufferedImage createVerifyCodeRegister(){
+    public BufferedImage createVerifyCodeRegister() {
         int width = 80;
         int height = 32;
         //create the image
@@ -71,25 +108,26 @@ public class MiaoshaService {
         try {
             ScriptEngineManager manager = new ScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName("JavaScript");
-            Integer catch1 = (Integer)engine.eval(exp);
+            Integer catch1 = (Integer) engine.eval(exp);
             return catch1.intValue();
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
     }
 
-    private static char[] ops = new char[] {'+', '-', '*'};
+    private static char[] ops = new char[]{'+', '-', '*'};
+
     /**
      * + - *
-     * */
+     */
     private String generateVerifyCode(Random rdm) {
         int num1 = rdm.nextInt(10);
         int num2 = rdm.nextInt(10);
         int num3 = rdm.nextInt(10);
         char op1 = ops[rdm.nextInt(3)];
         char op2 = ops[rdm.nextInt(3)];
-        String exp = ""+ num1 + op1 + num2 + op2 + num3;
+        String exp = "" + num1 + op1 + num2 + op2 + num3;
         return exp;
     }
 
@@ -99,10 +137,10 @@ public class MiaoshaService {
      * @param verifyCode
      * @return
      */
-    public boolean checkVerifyCodeRegister(int verifyCode){
+    public boolean checkVerifyCodeRegister(int verifyCode) {
         String registerKey = "register";
         Integer codeOld = redisService.get(MiaoshaKey.getMiaoshaVerifyCodeRegister, registerKey, Integer.class);
-        if (codeOld == null || codeOld - verifyCode != 0){
+        if (codeOld == null || codeOld - verifyCode != 0) {
             return false;
         }
 

@@ -25,7 +25,7 @@ public class LoginVo {
     private String mobile;
 
     @NotNull
-    @Length(min=32)
+    @Length(min = 32)
     private String password;
 
     @Override

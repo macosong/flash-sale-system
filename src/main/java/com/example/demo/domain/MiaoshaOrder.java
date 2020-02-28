@@ -20,4 +20,14 @@ public class MiaoshaOrder {
     private Long userId;
     private Long orderId;
     private Long goodsId;
+
+    @Override
+    public String toString() {
+        return "MiaoshaOrder{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", orderId=" + orderId +
+                ", goodsId=" + goodsId +
+                '}';
+    }
 }

@@ -32,7 +32,7 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequestMapping("/goods")
-public class GoodsController extends BaseController{
+public class GoodsController extends BaseController {
 
     @Autowired
     private MiaoShaUserService userService;
@@ -51,7 +51,7 @@ public class GoodsController extends BaseController{
 
     @RequestMapping(value = "/to_list", produces = "text/html")
     @ResponseBody
-    public String list(HttpServletRequest request, HttpServletResponse response, Model model){
+    public String list(HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("user", userService.getFromCookie(request));
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
         model.addAttribute("goodsList", goodsList);
@@ -60,14 +60,14 @@ public class GoodsController extends BaseController{
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET, produces = "text/html")
     @ResponseBody
-    public String detail(HttpServletRequest request, HttpServletResponse response, Model model){
+    public String detail(HttpServletRequest request, HttpServletResponse response, Model model) {
         long goodsId = Long.parseLong(request.getParameter("goodsId"));
         MiaoshaUser user = userService.getFromCookie(request);
         model.addAttribute("user", user);
 
         String html = redisService.get(GoodsKey.getGoodsDetail, "" + goodsId, String.class);
 
-        if (!StringUtils.isEmpty(html)){
+        if (!StringUtils.isEmpty(html)) {
             return html;
         }
 
@@ -80,20 +80,20 @@ public class GoodsController extends BaseController{
 
         int miaoshaStatus = 0;
         int remainSeconds = 0;
-        if(now < startTime){
-            remainSeconds = (int)((startTime - now)/1000);
-        }else if (now > endTime){
+        if (now < startTime) {
+            remainSeconds = (int) ((startTime - now) / 1000);
+        } else if (now > endTime) {
             miaoshaStatus = 2;
             remainSeconds = -1;
         }
 
-        model.addAttribute("miaoshaStatus",miaoshaStatus);
+        model.addAttribute("miaoshaStatus", miaoshaStatus);
         model.addAttribute("remainSeconds", remainSeconds);
 
         WebContext context = new WebContext(request, response,
-                            request.getServletContext(), request.getLocale(), model.asMap());
+                request.getServletContext(), request.getLocale(), model.asMap());
         html = viewResolver.getTemplateEngine().process("goods_detail", context);
-        redisService.set(GoodsKey.getGoodsDetail, ""+ goodsId, html);
+        redisService.set(GoodsKey.getGoodsDetail, "" + goodsId, html);
         return html;
     }
 

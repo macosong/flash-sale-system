@@ -13,9 +13,9 @@ import redis.clients.jedis.Jedis;
 @SpringBootTest
 public class RedisTest {
 
-    public void redisTester(){
+    public void redisTester() {
         Jedis jedis = new Jedis("49.234.28.27", 6379, 10000);
-        System.out.println("服务正在运行: "+jedis.ping());
+        System.out.println("服务正在运行: " + jedis.ping());
     }
 
     @Autowired
@@ -24,11 +24,11 @@ public class RedisTest {
     RedisTemplate redisTemplate;
 
     @Test
-    public void testRedisTemplate(){
-        if(stringRedisTemplate.hasKey("hello")){
+    public void testRedisTemplate() {
+        if (stringRedisTemplate.hasKey("hello")) {
             String hello = stringRedisTemplate.opsForValue().get("hello");
-            System.out.println("从redis中获取 key-hello--value : "+hello);
-            stringRedisTemplate.opsForValue().set("jane","is a boy");
+            System.out.println("从redis中获取 key-hello--value : " + hello);
+            stringRedisTemplate.opsForValue().set("jane", "is a boy");
         }
     }
 }

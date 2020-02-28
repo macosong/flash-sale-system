@@ -29,4 +29,21 @@ public class OrderInfo {
     private Integer status;
     private Date createDate;
     private Date payDate;
+
+    @Override
+    public String toString() {
+        return "OrderInfo{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", goodsId=" + goodsId +
+                ", deliveryAddrId=" + deliveryAddrId +
+                ", goodsName='" + goodsName + '\'' +
+                ", goodsCount=" + goodsCount +
+                ", goodsPrice=" + goodsPrice +
+                ", orderChannel=" + orderChannel +
+                ", status=" + status +
+                ", createDate=" + createDate +
+                ", payDate=" + payDate +
+                '}';
+    }
 }

@@ -21,13 +21,13 @@ public abstract class AbstractResult {
     private int code;
     private String message;
 
-    protected AbstractResult(ResultStatus status, String message){
+    protected AbstractResult(ResultStatus status, String message) {
         this.code = status.getCode();
         this.message = message;
         this.status = status;
     }
 
-    protected AbstractResult(ResultStatus status){
+    protected AbstractResult(ResultStatus status) {
         this.code = status.getCode();
         this.message = status.getMessage();
         this.status = status;
@@ -39,7 +39,7 @@ public abstract class AbstractResult {
      * @param status
      * @return
      */
-    public AbstractResult withError(ResultStatus status){
+    public AbstractResult withError(ResultStatus status) {
         this.status = status;
         return this;
     }
@@ -50,7 +50,7 @@ public abstract class AbstractResult {
      * @param message
      * @return
      */
-    public AbstractResult withError(String message){
+    public AbstractResult withError(String message) {
         this.status = ResultStatus.SYSTEM_ERROR;
         this.message = message;
         return this;
@@ -69,15 +69,15 @@ public abstract class AbstractResult {
         return this;
     }
 
-    public static boolean isSuccess(AbstractResult result){
+    public static boolean isSuccess(AbstractResult result) {
         return result != null && result.status == ResultStatus.SUCCESS && result.getCode() == ResultStatus.SUCCESS.getCode();
     }
 
-    public String getMessage(){
+    public String getMessage() {
         return this.message == null ? this.status.getMessage() : this.message;
     }
 
-    public AbstractResult success(){
+    public AbstractResult success() {
         this.status = ResultStatus.SUCCESS;
         return this;
     }

@@ -6,14 +6,18 @@ package com.example.demo.redis;
  * @author maco
  * @data 2019/10/25
  */
-public class BasePrefix  implements KeyPrefix{
-    private  int expireSeconds;
+public class BasePrefix implements KeyPrefix {
+    private int expireSeconds;
 
     private String prefix;
 
-    public BasePrefix(int expireSeconds, String prefix){
+    public BasePrefix(int expireSeconds, String prefix) {
         this.expireSeconds = expireSeconds;
         this.prefix = prefix;
+    }
+
+    public BasePrefix(String prefix) {
+        this(0, prefix);
     }
 
     @Override

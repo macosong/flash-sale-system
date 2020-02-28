@@ -9,23 +9,23 @@
              targetRuntime="MyBatis3Simple">
 
         <!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表； 一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖 -->
-        <property name="autoDelimitKeywords" value="false" />
+        <property name="autoDelimitKeywords" value="false"/>
         <!-- 生成的Java文件的编码 -->
-        <property name="javaFileEncoding" value="UTF-8" />
+        <property name="javaFileEncoding" value="UTF-8"/>
         <!-- 格式化java代码 -->
         <property name="javaFormatter"
-                  value="org.mybatis.generator.api.dom.DefaultJavaFormatter" />
+                  value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
         <!-- 格式化XML代码 -->
         <property name="xmlFormatter"
-                  value="org.mybatis.generator.api.dom.DefaultXmlFormatter" />
+                  value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
 
         <!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
-        <property name="beginningDelimiter" value="`" />
-        <property name="endingDelimiter" value="`" />
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
 
         <commentGenerator>
-            <property name="suppressDate" value="true" />
-            <property name="suppressAllComments" value="true" />
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
         </commentGenerator>
 
         <!-- 必须要有的，使用这个配置链接数据库 @TODO:是否可以扩展 -->
@@ -37,10 +37,10 @@
         <!-- java类型处理器 用于处理DB中的类型到Java中的类型，默认使用JavaTypeResolverDefaultImpl； 注意一点，默认会先尝试使用Integer，Long，Short等来对应DECIMAL和
             NUMERIC数据类型； -->
         <!--<javaTypeResolver-->
-                <!--type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">-->
-            <!--&lt;!&ndash; true：使用BigDecimal对应DECIMAL和 NUMERIC数据类型 false：默认, scale>0;length>18：使用BigDecimal;-->
-                <!--scale=0;length[10,18]：使用Long； scale=0;length[5,9]：使用Integer； scale=0;length<5：使用Short； &ndash;&gt;-->
-            <!--<property name="forceBigDecimals" value="false" />-->
+        <!--type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">-->
+        <!--&lt;!&ndash; true：使用BigDecimal对应DECIMAL和 NUMERIC数据类型 false：默认, scale>0;length>18：使用BigDecimal;-->
+        <!--scale=0;length[10,18]：使用Long； scale=0;length[5,9]：使用Integer； scale=0;length<5：使用Short； &ndash;&gt;-->
+        <!--<property name="forceBigDecimals" value="false" />-->
         <!--</javaTypeResolver>-->
 
 
@@ -50,13 +50,13 @@
         <javaModelGenerator targetPackage="com.example.demo.mybatis.entity"
                             targetProject="src/main/java">
             <!-- for MyBatis3/MyBatis3Simple 自动为每一个生成的类创建一个构造方法，构造方法包含了所有的field；而不是使用setter； -->
-            <property name="constructorBased" value="false" />
+            <property name="constructorBased" value="false"/>
 
             <!-- for MyBatis3 / MyBatis3Simple 是否创建一个不可变的类，如果为true， 那么MBG会创建一个没有setter方法的类，取而代之的是类似constructorBased的类 -->
-            <property name="immutable" value="false" />
+            <property name="immutable" value="false"/>
 
             <!-- 设置是否在getter方法中，对String类型字段调用trim()方法 -->
-            <property name="trimStrings" value="true" />
+            <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- 生成mapper.xml配置文件的位置-->
@@ -66,7 +66,7 @@
         <sqlMapGenerator targetPackage="com.example.demo.mybatis.mapper"
                          targetProject="src/main/java">
             <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
-            <property name="enableSubPackages" value="true" />
+            <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
@@ -78,7 +78,7 @@
         <javaClientGenerator targetPackage="com.example.demo.mybatis.mapper"
                              type="XMLMAPPER" targetProject="src/main/java">
             <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
-            <property name="enableSubPackages" value="true" />
+            <property name="enableSubPackages" value="true"/>
 
             <!-- 可以为所有生成的接口添加一个父接口，但是MBG只负责生成，不负责检查 <property name="rootInterface"
                 value=""/> -->

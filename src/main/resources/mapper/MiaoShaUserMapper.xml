@@ -3,7 +3,7 @@
 
 <mapper namespace="com.example.demo.dao.MiaoShaUserMapper">
     <!--  query -->
-    <select id="getByNickname" parameterType="String" resultType="com.example.demo.domain.MiaoshaUser" >
+    <select id="getByNickname" parameterType="String" resultType="com.example.demo.domain.MiaoshaUser">
         select * from miaosha_user where nickname = #{nickname}
     </select>
 
@@ -17,7 +17,8 @@
     </update>
 
     <insert id="insertMiaoShaUser" parameterType="com.example.demo.domain.MiaoshaUser"
-        useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        insert into miaosha_user (id , nickname ,password , salt ,head,register_date,last_login_date) values (#{id},#{nickname},#{password},#{salt},#{head},#{registerDate},#{lastLoginDate})
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into miaosha_user (id , nickname ,password , salt ,head,register_date,last_login_date) values
+        (#{id},#{nickname},#{password},#{salt},#{head},#{registerDate},#{lastLoginDate})
     </insert>
 </mapper>

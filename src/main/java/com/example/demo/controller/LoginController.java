@@ -31,7 +31,7 @@ public class LoginController {
     private MiaoShaUserService userService;
 
     @RequestMapping("/to_login")
-    public String tologin(LoginVo loginVo, Model model){
+    public String tologin(LoginVo loginVo, Model model) {
         log.info(loginVo.toString());
         RedisLua.visitorCount(COUNTLOGIN);
         String count = RedisLua.getVistorCount(COUNTLOGIN).toString();
@@ -42,7 +42,7 @@ public class LoginController {
 
     @RequestMapping("/do_login")
     @ResponseBody
-    public MyResult<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo){
+    public MyResult<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
         MyResult<Boolean> result = MyResult.build();
         userService.login(response, loginVo);
         return result;

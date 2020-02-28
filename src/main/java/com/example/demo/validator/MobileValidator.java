@@ -13,7 +13,7 @@ import java.lang.annotation.Annotation;
  * @author maco
  * @data 2019/10/24
  */
-public class MobileValidator implements ConstraintValidator<MobileCheck, String>{
+public class MobileValidator implements ConstraintValidator<MobileCheck, String> {
 
     private boolean require = false;
 
@@ -24,12 +24,12 @@ public class MobileValidator implements ConstraintValidator<MobileCheck, String>
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        if (require){
+        if (require) {
             return ValidatorUtil.isMobile(value);
-        }else {
-            if (StringUtils.isEmpty(value)){
+        } else {
+            if (StringUtils.isEmpty(value)) {
                 return true;
-            }else{
+            } else {
                 return ValidatorUtil.isMobile(value);
             }
         }

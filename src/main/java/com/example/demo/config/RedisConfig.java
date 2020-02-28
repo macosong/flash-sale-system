@@ -29,7 +29,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     @Bean
     @Override
-    public CacheManager cacheManager(){
+    public CacheManager cacheManager() {
         //初始化缓存管理器
         log.info("初始化 -> [{}]", "CacheManager RedisCacheManager Start");
         RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager
@@ -39,7 +39,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory ) {
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
         //设置序列化
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         ObjectMapper om = new ObjectMapper();
@@ -79,7 +79,7 @@ public class RedisConfig extends CachingConfigurerSupport {
             }
 
             @Override
-            public void handleCacheEvictError(RuntimeException e, Cache cache, Object key)    {
+            public void handleCacheEvictError(RuntimeException e, Cache cache, Object key) {
                 log.error("Redis occur handleCacheEvictError：key -> [{}]", key, e);
             }
 

@@ -19,11 +19,15 @@ public class GoodsService {
     @Autowired
     GoodsMapper goodsMapper;
 
-    public List<GoodsVo> listGoodsVo()  { return goodsMapper.listGoodsVo(); }
+    public List<GoodsVo> listGoodsVo() {
+        return goodsMapper.listGoodsVo();
+    }
 
-    public GoodsVo getCoodsVoByGoodsId(long goodsId)    { return goodsMapper.getGoodsVoByGoodsId(goodsId); }
+    public GoodsVo getCoodsVoByGoodsId(long goodsId) {
+        return goodsMapper.getGoodsVoByGoodsId(goodsId);
+    }
 
-    public boolean reduceStock(GoodsVo goodsVo){
+    public boolean reduceStock(GoodsVo goodsVo) {
         MiaoshaGoods goods = new MiaoshaGoods();
         goods.setGoodsId(goods.getId());
         int ret = goodsMapper.reduceStock(goods);
