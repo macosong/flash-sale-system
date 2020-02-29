@@ -81,7 +81,9 @@ pageCache:
 
 
 
-#mybatis:
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
 #  mapper-locations: classpath:mapper/*.xml
 server:
   port: 8090

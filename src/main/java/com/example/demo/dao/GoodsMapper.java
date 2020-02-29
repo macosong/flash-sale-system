@@ -28,6 +28,7 @@ public interface GoodsMapper {
     @Select("select g.*,mg.stock_count, mg.start_date, mg.end_date,mg.miaosha_price from miaosha_goods mg left join goods g on mg.goods_id = g.id")
     List<GoodsVo> listGoodsVo();
 
+
     /**
      * 通过商品id获取商品详细信息
      *

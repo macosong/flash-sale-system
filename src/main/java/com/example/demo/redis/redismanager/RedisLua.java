@@ -22,7 +22,7 @@ public class RedisLua {
      * @return
      */
     public static Object redisVisit(String key, String luaStr) {
-        Jedis jedis;
+        Jedis jedis = null;
         Object object = null;
         try {
             jedis = RedisManager.getJedis();
@@ -33,6 +33,10 @@ public class RedisLua {
             object = jedis.evalsha(luaScript, keys, argves);
         } catch (Exception e) {
             log.error("统计访问次数失败！！！", e);
+        }finally {
+            if (jedis != null){
+                jedis.close();
+            }
         }
         return object;
     }

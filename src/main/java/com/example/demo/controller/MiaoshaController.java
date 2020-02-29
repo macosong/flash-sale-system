@@ -65,7 +65,7 @@ public class MiaoshaController implements InitializingBean {
      * 秒杀的业务方法
      *
      * @param model
-     * @param path
+    // * @param path
      * @param goodsId
      * @param request
      * @return
@@ -76,16 +76,17 @@ public class MiaoshaController implements InitializingBean {
     public MyResult<Integer> flashBuy(Model model,
                                       @PathVariable("path") String path,
                                       @RequestParam("goodsId") long goodsId,
-                                      HttpServletRequest request) {
+                                      HttpServletRequest request,
+                                      MiaoshaUser user) {
+        //TODO：限流路径
         MyResult<Integer> result = MyResult.build();
-        MiaoshaUser user = userService.getFromCookie(request);
 
         if (user == null) {
             result.withError(SESSION_ERROR.getCode(), SESSION_ERROR.getMessage());
             return result;
         }
 
-        //验证path，限流
+        //验证隐藏path
         boolean check = miaoshaService.checkPath(user, goodsId, path);
         if (!check) {
             result.withError(REQUEST_ILLEGAL.getCode(), REQUEST_ILLEGAL.getMessage());
@@ -113,12 +114,98 @@ public class MiaoshaController implements InitializingBean {
             result.withError(MIAO_SHA_OVER.getCode(), MIAO_SHA_OVER.getMessage());
             return result;
         }
-
+        
         MiaoshaMessage mm = new MiaoshaMessage();
         mm.setGoodsId(goodsId);
         mm.setUser(user);
         mqSender.sendMiaoshaMessage(mm);
         return result;
+    }
+
+    /**
+     * 获取随机生成的地址
+     *
+     * @param request
+     * @param user
+     * @param goodsId
+     * @param verifyCode
+     * @return
+     */
+    @AccessLimit(seconds = 5, maxCount = 5, needLogin = true)
+    @RequestMapping(value = "/path", method = RequestMethod.GET)
+    @ResponseBody
+    public MyResult<String> getMiaoshaPath(HttpServletRequest request, MiaoshaUser user,
+                                              @RequestParam("goodsId") long goodsId,
+                                              @RequestParam(value = "verifyCode", defaultValue = "0") int verifyCode
+    ) {
+        MyResult<String> result = MyResult.build();
+        if (user == null) {
+            result.withError(SESSION_ERROR.getCode(), SESSION_ERROR.getMessage());
+            return result;
+        }
+        boolean check = miaoshaService.checkVerifyCode(user, goodsId, verifyCode);
+        if (!check) {
+            result.withError(REQUEST_ILLEGAL.getCode(), REQUEST_ILLEGAL.getMessage());
+            return result;
+        }
+        String path = miaoshaService.createMiaoshaPath(user, goodsId);
+        result.setData(path);
+        return result;
+    }
+
+    /**
+     * 前端轮询获取秒杀结果
+     *
+     * @param model
+     * @param user
+     * @param goodsId
+     * @return
+     */
+    @AccessLimit(seconds = 5, maxCount = 5, needLogin = true)
+    @RequestMapping(value = "/result", method = RequestMethod.GET)
+    @ResponseBody
+    public MyResult<Long> miaoshaResult(Model model, MiaoshaUser user,
+                                           @RequestParam("goodsId") long goodsId) {
+        MyResult<Long> result = MyResult.build();
+        if (user == null) {
+            result.withError(SESSION_ERROR.getCode(), SESSION_ERROR.getMessage());
+            return result;
+        }
+        model.addAttribute("user", user);
+        Long miaoshaResult = miaoshaService.getMiaoshaResult(Long.valueOf(user.getNickname()), goodsId);
+        result.setData(miaoshaResult);
+        return result;
+    }
+
+    /**
+     * 生成秒杀验证码
+     *
+     * @param response
+     * @param user
+     * @param goodsId
+     * @return
+     */
+    @RequestMapping(value = "/verifyCode", method = RequestMethod.GET)
+    @ResponseBody
+    public MyResult<String> getMiaoshaVerifyCod(HttpServletResponse response, MiaoshaUser user,
+                                                   @RequestParam("goodsId") long goodsId) {
+        MyResult<String> result = MyResult.build();
+        if (user == null) {
+            result.withError(SESSION_ERROR.getCode(), SESSION_ERROR.getMessage());
+            return result;
+        }
+        try {
+            BufferedImage image = miaoshaService.createVerifyCode(user, goodsId);
+            OutputStream out = response.getOutputStream();
+            ImageIO.write(image, "JPEG", out);
+            out.flush();
+            out.close();
+            return result;
+        } catch (Exception e) {
+            log.error("生成验证码错误-----goodsId:{}", goodsId, e);
+            result.withError(MIAOSHA_FAIL.getCode(), MIAOSHA_FAIL.getMessage());
+            return result;
+        }
     }
 
 

@@ -44,7 +44,7 @@ public class MQReceiver {
         MiaoshaUser user = mm.getUser();
         long goodsId = mm.getGoodsId();
 
-        GoodsVo goods = goodsService.getCoodsVoByGoodsId(goodsId);
+        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
         int stock = goods.getStockCount();
         if (stock <= 0) {
             return;
@@ -55,8 +55,8 @@ public class MQReceiver {
         if (order != null) {
             return;
         }
-
         //减库存、下订单
         miaoshaService.miaosha(user, goods);
+
     }
 }

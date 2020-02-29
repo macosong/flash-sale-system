@@ -17,8 +17,12 @@ import redis.clients.jedis.JedisPool;
 @Service
 @Slf4j
 public class RedisService {
-    @Autowired
     JedisPool jedisPool;
+
+    @Autowired
+    public RedisService(JedisPool jedisPool){
+        this.jedisPool = jedisPool;
+    }
 
     /**
      * 删除一条数据

@@ -30,7 +30,6 @@ public interface MiaoShaMessageMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insertMiaoShaMessageUser(MiaoShaMessageUser miaoShaMessageUser);
 
-
     @Select(" <script> select * from miaosha_message_user mmu , miaosha_message mm where " +
             " mmu.messageid = mm.messageid and  userid=${userId}  <if test=\"status !=null \">and status = #{status} </if></script> ")
     List<MiaoShaMessageInfo> listMiaoShaMessageByUserId(@Param("userId") long userId, @Param("status") Integer status);

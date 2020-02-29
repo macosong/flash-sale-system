@@ -1,10 +1,14 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.MiaoshaOrder;
 import com.example.demo.domain.MiaoshaUser;
 import com.example.demo.domain.OrderInfo;
 import com.example.demo.redis.MiaoshaKey;
 import com.example.demo.redis.RedisService;
+import com.example.demo.utils.MD5Utils;
+import com.example.demo.utils.UUIDUtil;
 import com.example.demo.vo.GoodsVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,7 @@ import java.util.Random;
  * @author maco
  * @data 2019/10/28
  */
+@Slf4j
 @Service
 public class MiaoshaService {
     @Autowired
@@ -33,7 +38,7 @@ public class MiaoshaService {
     GoodsService goodsService;
 
     /**
-     *
+     * 事务型异步减库存、生成订单
      *
      * @param user
      * @param goods
@@ -43,8 +48,13 @@ public class MiaoshaService {
     public OrderInfo miaosha(MiaoshaUser user, GoodsVo goods) {
         //减库存
         boolean success = goodsService.reduceStock(goods);
+        if (!success){
+            log.info("减库存失败！");
+        }
         if (success) {
-            return orderService.createOrder(user, goods);
+            OrderInfo res = orderService.createOrder(user, goods);
+            log.info(res.toString());
+            return res;
         } else {
             //如果库存不存在则内存标记为true
             setGoodsOver(goods.getId());
@@ -66,6 +76,107 @@ public class MiaoshaService {
         }
         String pathOld = redisService.get(MiaoshaKey.getMiaoshaPath, "" + user.getNickname() + "_" + goodsId, String.class);
         return path.equals(pathOld);
+    }
+
+    /**
+     * 生成随机地址防止秒杀接口暴露
+     *
+     * @param user
+     * @param goodsId
+     * @return
+     */
+    public String createMiaoshaPath(MiaoshaUser user, long goodsId) {
+        if(user == null || goodsId <=0) {
+            return null;
+        }
+        String str = MD5Utils.md5(UUIDUtil.uuid()+"123456");
+        redisService.set(MiaoshaKey.getMiaoshaPath, ""+user.getNickname() + "_"+ goodsId, str);
+        return str;
+    }
+
+    /**
+     * 检查秒杀时的验证码
+     *
+     * @param user
+     * @param goodsId
+     * @param verifyCode
+     * @return
+     */
+    public boolean checkVerifyCode(MiaoshaUser user, long goodsId, int verifyCode) {
+        if(user == null || goodsId <=0) {
+            return false;
+        }
+        Integer codeOld = redisService.get(MiaoshaKey.getMiaoshaVerifyCode, user.getNickname()+","+goodsId, Integer.class);
+        if(codeOld == null || codeOld - verifyCode != 0 ) {
+            return false;
+        }
+        redisService.delete(MiaoshaKey.getMiaoshaVerifyCode, user.getNickname()+","+goodsId);
+        return true;
+    }
+
+    /**
+     * 获得秒杀结果
+     *
+     * @param userId
+     * @param goodsId
+     * @return
+     */
+    public long getMiaoshaResult(Long userId, long goodsId) {
+        MiaoshaOrder order = orderService.getMiaoshaOrderByUserIdGoodsId(userId, goodsId);
+        if(order != null) {
+            //秒杀成功
+            return order.getOrderId();
+        }else {
+            boolean isOver = getGoodsOver(goodsId);
+            if(isOver) {
+                return -1;
+            }else {
+                return 0;
+            }
+        }
+    }
+
+    /**
+     * 秒杀验证码
+     *
+     * @param user
+     * @param goodsId
+     * @return
+     */
+    public BufferedImage createVerifyCode(MiaoshaUser user, long goodsId) {
+        if(user == null || goodsId <=0) {
+            return null;
+        }
+        int width = 80;
+        int height = 32;
+        //create the image
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.getGraphics();
+        // set the background color
+        g.setColor(new Color(0xDCDCDC));
+        g.fillRect(0, 0, width, height);
+        // draw the border
+        g.setColor(Color.black);
+        g.drawRect(0, 0, width - 1, height - 1);
+        // create a random instance to generate the codes
+        Random rdm = new Random();
+        // make some confusion
+        for (int i = 0; i < 50; i++) {
+            int x = rdm.nextInt(width);
+            int y = rdm.nextInt(height);
+            g.drawOval(x, y, 0, 0);
+        }
+        // generate a random code
+        String verifyCode = generateVerifyCode(rdm);
+        g.setColor(new Color(0, 100, 0));
+        g.setFont(new Font("Candara", Font.BOLD, 24));
+        g.drawString(verifyCode, 8, 24);
+        g.dispose();
+        //把验证码存到redis中
+        int rnd = calc(verifyCode);
+        redisService.set(MiaoshaKey.getMiaoshaVerifyCode, user.getNickname()+","+goodsId, rnd);
+        //输出图片
+        return image;
     }
 
     /**

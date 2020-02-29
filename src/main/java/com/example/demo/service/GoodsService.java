@@ -23,13 +23,13 @@ public class GoodsService {
         return goodsMapper.listGoodsVo();
     }
 
-    public GoodsVo getCoodsVoByGoodsId(long goodsId) {
+    public GoodsVo getGoodsVoByGoodsId(long goodsId) {
         return goodsMapper.getGoodsVoByGoodsId(goodsId);
     }
 
     public boolean reduceStock(GoodsVo goodsVo) {
         MiaoshaGoods goods = new MiaoshaGoods();
-        goods.setGoodsId(goods.getId());
+        goods.setGoodsId(goodsVo.getId());
         int ret = goodsMapper.reduceStock(goods);
         return ret > 0;
     }

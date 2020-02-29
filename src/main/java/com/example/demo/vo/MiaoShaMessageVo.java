@@ -49,4 +49,24 @@ public class MiaoShaMessageVo implements Serializable {
     private BigDecimal price;
 
     private String messageHead;
+
+    @Override
+    public String toString() {
+        return "MiaoShaMessageVo{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", goodId='" + goodId + '\'' +
+                ", orderId=" + orderId +
+                ", messageId=" + messageId +
+                ", content='" + content + '\'' +
+                ", createTime=" + createTime +
+                ", status=" + status +
+                ", overTime=" + overTime +
+                ", messageType=" + messageType +
+                ", sendType=" + sendType +
+                ", goodName='" + goodName + '\'' +
+                ", price=" + price +
+                ", messageHead='" + messageHead + '\'' +
+                '}';
+    }
 }

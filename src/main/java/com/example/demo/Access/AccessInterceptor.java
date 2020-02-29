@@ -30,11 +30,15 @@ import static com.example.demo.common.enums.ResultStatus.SESSION_ERROR;
 @Slf4j
 @Service
 public class AccessInterceptor extends HandlerInterceptorAdapter {
-    @Autowired
     MiaoShaUserService userService;
 
-    @Autowired
     RedisService redisService;
+
+    @Autowired
+    public AccessInterceptor(MiaoShaUserService userService, RedisService redisService){
+        this.userService = userService;
+        this.redisService = redisService;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -72,6 +76,11 @@ public class AccessInterceptor extends HandlerInterceptorAdapter {
             }
         }
         return super.preHandle(request, response, handler);
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        UserContext.removeUser();
     }
 
     private void render(HttpServletResponse response, ResultStatus cm)throws Exception {

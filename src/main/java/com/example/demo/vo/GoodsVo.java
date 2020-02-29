@@ -30,4 +30,21 @@ public class GoodsVo {
     private Date startDate;
     private Date endDate;
     private Double miaoshaPrice;
+
+    @Override
+    public String toString() {
+        return "GoodsVo{" +
+                "id=" + id +
+                ", goodsName='" + goodsName + '\'' +
+                ", goodsTitle='" + goodsTitle + '\'' +
+                ", goodsImg='" + goodsImg + '\'' +
+                ", goodsDetail='" + goodsDetail + '\'' +
+                ", goodsPrice=" + goodsPrice +
+                ", goodsStock=" + goodsStock +
+                ", stockCount=" + stockCount +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", miaoshaPrice=" + miaoshaPrice +
+                '}';
+    }
 }
